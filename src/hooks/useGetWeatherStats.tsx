@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-// 
+//
 import { apiKey, apiUrl } from "../utils/constants";
 import { isObjEmpty } from "../utils/helper";
 
@@ -35,7 +35,7 @@ export const useGetWeatherStats = () => {
 
     try {
       setIsLoading(true);
-
+      setError("");
       const res = await fetch(url);
       const responseData: WeatherData | ErrorData = await res.json();
 
