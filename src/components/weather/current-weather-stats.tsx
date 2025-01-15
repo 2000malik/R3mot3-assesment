@@ -21,7 +21,9 @@ export const CurrentWeatherStats: React.FC<WeatherStatsProp> = ({
   const dataList = () => {
     return [
       {
-        header: `${data?.name?.toUpperCase()}, ${data?.sys?.country?.toUpperCase()}`,
+        header: `${data?.name?.toUpperCase()}, ${
+          data?.sys?.country?.toUpperCase() ?? ""
+        }`,
         subText: ` ${today?.toDateString()}`,
       },
       {
