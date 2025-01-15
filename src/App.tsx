@@ -1,17 +1,21 @@
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { ToastContainer, toast } from "react-toastify";
 //
 import { units } from "./utils/constants";
 import { useGetWeatherStats } from "./hooks/useGetWeatherStats";
 import { CloudSunRain } from "./components/icons";
 //
-import {
-  AirConditionStats,
-  Button,
-  CurrentWeatherStats,
-  SearchBox,
-  SelectBox,
-} from "./components";
+import { Button, SearchBox, SelectBox } from "./components";
+const CurrentWeatherStats = lazy(() =>
+  import("./components").then((module) => ({
+    default: module.CurrentWeatherStats,
+  }))
+);
+const AirConditionStats = lazy(() =>
+  import("./components").then((module) => ({
+    default: module.AirConditionStats,
+  }))
+);
 import "./App.css";
 
 function App() {
@@ -45,6 +49,7 @@ function App() {
           <SearchBox
             value={searchValue}
             onChange={(evt) => setSearchValue(evt.target.value)}
+            placeholder="Enter city name here"
           />
           <SelectBox
             placeholder="select unit conversion"
@@ -60,7 +65,7 @@ function App() {
           </Button>
         </div>
         {isLoading ? (
-          <h1>fetching data ......</h1>
+          <h2>fetching data ......</h2>
         ) : (
           <div className="record-section">
             {isDataEmpty ? (
@@ -68,10 +73,10 @@ function App() {
                 <CloudSunRain />
               </div>
             ) : (
-              <>
+              <Suspense>
                 <CurrentWeatherStats data={data} unit={unit} />
                 <AirConditionStats data={data} unit={unit} />
-              </>
+              </Suspense>
             )}
           </div>
         )}

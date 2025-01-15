@@ -25,7 +25,7 @@ export const AirConditionStats: React.FC<WeatherStatsProp> = ({
       },
       {
         header: `${Math.round(
-          data?.main?.feels_like
+          Number(data?.main?.feels_like)
         )} ${unitAbbreviationForTemperature(unit)}`,
         icon: <Temperature />,
         title: "Feels Like",

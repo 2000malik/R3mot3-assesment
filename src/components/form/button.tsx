@@ -8,13 +8,8 @@ type Props = {
   type?: "button" | "submit" | "reset";
   handleOnclick: () => void;
 };
-const styles = {
-  Button: {
-    borderRadius: 10,
-    backgroundColor: "#01cf13",
-    padding: 7,
-  },
 
+const styles = {
   ButtonText: {
     fontSize: 18,
     fontWeight: "400",
@@ -22,6 +17,7 @@ const styles = {
     color: "#ffffff",
   },
 };
+
 export const Button: React.FC<Props> = ({
   disabled = false,
   loading,

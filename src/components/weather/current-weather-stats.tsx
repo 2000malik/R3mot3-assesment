@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-// 
+//
 import { unitAbbreviationForTemperature } from "../../utils/helper";
 import { imgBaseURL } from "../../utils/constants";
 
@@ -26,7 +26,7 @@ export const CurrentWeatherStats: React.FC<WeatherStatsProp> = ({
       },
       {
         header: `${Math.round(
-          data?.main?.temp
+          Number(data?.main?.temp)
         )} ${unitAbbreviationForTemperature(unit)}`,
         subText: ` ${data?.weather?.[0]?.description}`,
       },

@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-//
+// 
 import { apiKey, apiUrl } from "../utils/constants";
 import { isObjEmpty } from "../utils/helper";
 
@@ -14,51 +14,59 @@ export const useGetWeatherStats = () => {
   const [unit, setUnit] = useState<string>("metric");
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [data, setData] = useState({});
+  const [data, setData] = useState<WeatherData | null>(null);
 
-  // functions
+  // Handle unit conversion change
   const handleUnitConversionChange = (
     evt: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const value = evt.target.value;
     if (unit !== value) {
-      setData({});
+      setData(null); // Clear data on unit change
     }
     setUnit(value);
   };
 
+  // Fetch weather stats
   const getCurrentWeatherStats = useCallback(async () => {
+    if (!searchValue) return; // Early return if no search value
+
     const url = `${apiUrl}/data/2.5/weather?q=${searchValue}&units=${unit}&appid=${apiKey}`;
+
     try {
       setIsLoading(true);
+
       const res = await fetch(url);
+      const responseData: WeatherData | ErrorData = await res.json();
+
       if (!res.ok) {
-        setData({});
-        const errorData: ErrorData = await res.json();
+        setData(null);
+        const errorData = responseData as ErrorData;
+
         if (errorData.cod === "404") {
           setError(errorData.message);
         } else {
           setError("An error occurred while fetching data.");
         }
+      } else {
+        setData(responseData as WeatherData);
+        setError(""); // Clear previous errors
       }
-      if (res.ok) {
-        const wthResponse = await res.json();
-
-        setData(wthResponse);
-      }
-      setIsLoading(false);
     } catch (error) {
-      console.log(error);
-      const typedError = error as Error;
       setIsLoading(false);
-      setError(typedError.message);
+      const typedError = error as Error;
+      setError(typedError.message || "An unexpected error occurred.");
+    } finally {
+      setIsLoading(false); // Ensure loading is always stopped
     }
   }, [searchValue, unit]);
 
+  // Main function to trigger weather fetch
   const getWeatherStats = async () => {
     await getCurrentWeatherStats();
   };
 
+  // Check if data is empty
   const isDataEmpty = isObjEmpty(data);
 
   return {
