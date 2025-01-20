@@ -53,7 +53,7 @@ export const useGetWeatherStats = () => {
         setError(""); // Clear previous errors
       }
     } catch (error) {
-      setIsLoading(false);
+      // setIsLoading(false);
       const typedError = error as Error;
       setError(typedError.message || "An unexpected error occurred.");
     } finally {
